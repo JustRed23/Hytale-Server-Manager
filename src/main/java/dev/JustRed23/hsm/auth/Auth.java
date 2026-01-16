@@ -17,18 +17,20 @@ public final class Auth {
 
     public static boolean attemptLogin() {
         creds = loadCredentials();
+        boolean result = true;
 
         if (creds == null || creds.accessToken.isBlank() || creds.refreshToken.isBlank()) {
             Main.LOGGER.warn("No valid credentials found, please log in.");
-            return refreshTokens(false);
+            result = refreshTokens(false);
         }
 
         if (now().isAfter(ofEpochSecond(creds.expiresAt))) {
             Main.LOGGER.info("Access token has expired, refreshing...");
-            return refreshTokens(true);
+            result = refreshTokens(true);
         }
 
-        return true;
+        if (result) Main.LOGGER.info("Successfully authenticated user.");
+        return result;
     }
 
     private static Credentials loadCredentials() {
