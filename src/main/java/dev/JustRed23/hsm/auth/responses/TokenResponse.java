@@ -30,7 +30,7 @@ public class TokenResponse {
         credentials.accessToken = accessToken;
         credentials.refreshToken = refreshToken;
         credentials.expiresAt = Instant.now().getEpochSecond() + expiresIn;
-        credentials.branch = args.get(args.patchline);
+        credentials.branch = "release"; //Based on application build info of the official hytale downloader, should always be release
         return credentials;
     }
 }
