@@ -13,6 +13,13 @@ repositories {
 dependencies {
     //Parsing args
     implementation "net.sf.jopt-simple:jopt-simple:${joptSimpleVersion}"
+
+    //Logger
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+
+    //GSON
+    implementation "com.google.code.gson:gson:${gsonVersion}"
 }
 
 jar {
