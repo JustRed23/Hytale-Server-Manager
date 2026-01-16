@@ -1,12 +1,20 @@
 package dev.JustRed23.hsm;
 
+import dev.JustRed23.hsm.auth.Auth;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Main {
 
-    private final Arguments args;
+    public static final Logger LOGGER = LogManager.getLogger(Main.class);
+    public static Arguments args;
 
     public Main(Arguments args) {
-        this.args = args;
-        System.out.println("Args: " + args);
+        Main.args = args;
+        LOGGER.debug("Starting with arguments: {}", args);
+
+        if (!Auth.attemptLogin()) return;
+
     }
 
     static void main(String[] args) throws Exception {
@@ -16,6 +24,6 @@ public class Main {
             return;
         }
 
-        Main main = new Main(arguments);
+        new Main(arguments);
     }
 }
