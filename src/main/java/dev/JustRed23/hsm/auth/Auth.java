@@ -1,6 +1,7 @@
 package dev.JustRed23.hsm.auth;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dev.JustRed23.hsm.Main;
 
 import java.io.*;
@@ -11,7 +12,7 @@ import static java.time.Instant.ofEpochSecond;
 
 public final class Auth {
 
-    private static final Gson GSON = new Gson();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File CREDS_FILE = new File(".hytale-downloader-credentials.json");
     public static Credentials creds;
 
