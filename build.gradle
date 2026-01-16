@@ -14,3 +14,14 @@ dependencies {
     //Parsing args
     implementation "net.sf.jopt-simple:jopt-simple:${joptSimpleVersion}"
 }
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'dev.JustRed23.hsm.Main',
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-Vendor': 'JustRed23'
+        )
+    }
+}
