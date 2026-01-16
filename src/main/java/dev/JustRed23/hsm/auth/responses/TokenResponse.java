@@ -13,7 +13,6 @@ public class TokenResponse {
     public @SerializedName("refresh_token") String refreshToken;
     public @SerializedName("scope") String scope;
     public @SerializedName("token_type") String tokenType;
-    public long willExpireAt = Instant.now().getEpochSecond() + expiresIn;
 
     @Override
     public String toString() {
@@ -23,7 +22,6 @@ public class TokenResponse {
                 ", refreshToken='" + refreshToken + '\'' +
                 ", scope='" + scope + '\'' +
                 ", tokenType='" + tokenType + '\'' +
-                ", willExpireAt=" + willExpireAt +
                 '}';
     }
 
@@ -31,7 +29,7 @@ public class TokenResponse {
         Credentials credentials = new Credentials();
         credentials.accessToken = accessToken;
         credentials.refreshToken = refreshToken;
-        credentials.expiresAt = willExpireAt;
+        credentials.expiresAt = Instant.now().getEpochSecond() + expiresIn;
         credentials.branch = args.get(args.patchline);
         return credentials;
     }

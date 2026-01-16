@@ -23,16 +23,8 @@ public final class TokenRefresher {
     }
 
     public Credentials refreshTokens() throws RuntimeException {
-        if (refreshToken != null) {
-            HttpRequest request = baseRequest(
-                    URI.create("https://oauth.accounts.hytale.com/oauth2/token"),
-                    "grant_type=refresh_token&refresh_token=" + refreshToken
-            );
-
-            String response = manageResponse(request);
-            TokenResponse tokenResponse = GSON.fromJson(response, TokenResponse.class);
-            return tokenResponse.toCredentials();
-        }
+        Credentials refreshTokenCreds = tryRefreshToken();
+        if (refreshTokenCreds != null) return refreshTokenCreds;
 
         HttpRequest request = baseRequest(
                 URI.create("https://oauth.accounts.hytale.com/oauth2/device/auth"),
@@ -85,6 +77,24 @@ public final class TokenRefresher {
         } catch (Exception e) {
             throw new RuntimeException("Request returned error", e);
         }
+    }
+
+    private Credentials tryRefreshToken() {
+        try {
+            if (refreshToken != null) {
+                HttpRequest request = baseRequest(
+                        URI.create("https://oauth.accounts.hytale.com/oauth2/token"),
+                        "grant_type=refresh_token&refresh_token=" + refreshToken
+                );
+
+                String response = manageResponse(request);
+                TokenResponse tokenResponse = GSON.fromJson(response, TokenResponse.class);
+                return tokenResponse.toCredentials();
+            }
+        } catch (Exception e) {
+            Main.LOGGER.warn("Failed to refresh tokens using refresh token, falling back to device authorization");
+        }
+        return null;
     }
 
     private TokenResponse waitForUserAuthorization(String deviceCode, int interval, int expiresIn) {
