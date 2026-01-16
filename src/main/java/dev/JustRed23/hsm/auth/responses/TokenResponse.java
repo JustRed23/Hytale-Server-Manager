@@ -1,10 +1,11 @@
 package dev.JustRed23.hsm.auth.responses;
 
 import com.google.gson.annotations.SerializedName;
-import dev.JustRed23.hsm.Main;
 import dev.JustRed23.hsm.auth.Credentials;
 
 import java.time.Instant;
+
+import static dev.JustRed23.hsm.Main.args;
 
 public class TokenResponse {
     public @SerializedName("access_token") String accessToken;
@@ -31,7 +32,7 @@ public class TokenResponse {
         credentials.accessToken = accessToken;
         credentials.refreshToken = refreshToken;
         credentials.expiresAt = willExpireAt;
-        credentials.branch = Main.args.options.valueOf(Main.args.patchline);
+        credentials.branch = args.get(args.patchline);
         return credentials;
     }
 }

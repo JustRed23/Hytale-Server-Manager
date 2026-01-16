@@ -36,6 +36,10 @@ public final class Arguments {
         options = parser.parse(args);
     }
 
+    public <T> T get(OptionSpec<T> option) {
+        return options.valueOf(option);
+    }
+
     public void printHelp() throws IOException {
         parser.printHelpOn(System.out);
     }
