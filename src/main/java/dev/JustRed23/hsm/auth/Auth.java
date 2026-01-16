@@ -3,6 +3,7 @@ package dev.JustRed23.hsm.auth;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.JustRed23.hsm.Main;
+import org.apache.logging.log4j.util.Strings;
 
 import java.io.*;
 import java.net.http.HttpClient;
@@ -20,7 +21,7 @@ public final class Auth {
         creds = loadCredentials();
         boolean result = true;
 
-        if (creds == null || creds.accessToken.isBlank() || creds.refreshToken.isBlank()) {
+        if (creds == null || Strings.isNotBlank(creds.accessToken) || Strings.isNotBlank(creds.refreshToken)) {
             Main.LOGGER.warn("No valid credentials found, please log in.");
             result = refreshTokens(false);
         }
