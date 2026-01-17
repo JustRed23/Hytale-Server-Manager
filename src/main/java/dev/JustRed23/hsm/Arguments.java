@@ -12,6 +12,7 @@ public final class Arguments {
     public final OptionSet options;
 
     public final OptionSpec<Void> help;
+    public final OptionSpec<Void> printServerHelp;
     public final OptionSpec<String> downloadPath;
     public final OptionSpec<String> patchline;
     public final OptionSpec<Void> skipUpdate;
@@ -20,6 +21,8 @@ public final class Arguments {
         parser.allowsUnrecognizedOptions();
 
         help = parser.accepts("help", "Show this help message").forHelp();
+
+        printServerHelp = parser.accepts("printServerHelp", "Prints the server help message and exits");
 
         downloadPath = parser.accepts("downloadPath")
                 .withRequiredArg()
