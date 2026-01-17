@@ -1,7 +1,5 @@
 package dev.JustRed23.hsm.auth;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dev.JustRed23.hsm.Main;
 import org.apache.logging.log4j.util.Strings;
 
@@ -13,7 +11,6 @@ import static java.time.Instant.ofEpochSecond;
 
 public final class Auth {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final File CREDS_FILE = new File(".hytale-downloader-credentials.json");
     public static Credentials creds;
 
@@ -39,7 +36,7 @@ public final class Auth {
         if (!CREDS_FILE.exists()) return null;
 
         try (Reader reader = new FileReader(CREDS_FILE)) {
-            return GSON.fromJson(reader, Credentials.class);
+            return Main.GSON.fromJson(reader, Credentials.class);
         } catch (IOException ioe) {
             Main.LOGGER.error("Could not read credentials file", ioe);
             boolean _ = CREDS_FILE.delete();
@@ -58,7 +55,7 @@ public final class Auth {
             }
 
             try (Writer writer = new FileWriter(CREDS_FILE)) {
-                GSON.toJson(creds, writer);
+                Main.GSON.toJson(creds, writer);
             }
 
             return true;

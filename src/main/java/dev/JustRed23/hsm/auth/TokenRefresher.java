@@ -1,6 +1,5 @@
 package dev.JustRed23.hsm.auth;
 
-import com.google.gson.Gson;
 import dev.JustRed23.hsm.Main;
 import dev.JustRed23.hsm.auth.responses.DeviceCodeResponse;
 import dev.JustRed23.hsm.auth.responses.TokenResponse;
@@ -13,7 +12,6 @@ import java.net.http.HttpResponse;
 
 public final class TokenRefresher {
 
-    private static final Gson GSON = new Gson();
     private final HttpClient client;
     private final @Nullable String refreshToken;
 
@@ -32,7 +30,7 @@ public final class TokenRefresher {
         );
 
         String response = manageResponse(request);
-        DeviceCodeResponse deviceCodeResponse = GSON.fromJson(response, DeviceCodeResponse.class);
+        DeviceCodeResponse deviceCodeResponse = Main.GSON.fromJson(response, DeviceCodeResponse.class);
 
         String message = """
                     
@@ -88,7 +86,7 @@ public final class TokenRefresher {
                 );
 
                 String response = manageResponse(request);
-                TokenResponse tokenResponse = GSON.fromJson(response, TokenResponse.class);
+                TokenResponse tokenResponse = Main.GSON.fromJson(response, TokenResponse.class);
                 return tokenResponse.toCredentials();
             }
         } catch (Exception e) {
@@ -123,7 +121,7 @@ public final class TokenRefresher {
                 if (response.statusCode() != 200)
                     throw new RuntimeException("Error while polling for device authorization (" + response.statusCode() + "): " + response.body());
 
-                return GSON.fromJson(response.body(), TokenResponse.class);
+                return Main.GSON.fromJson(response.body(), TokenResponse.class);
             } catch (Exception e) {
                 throw new RuntimeException("Error while polling for device authorization", e);
             }
