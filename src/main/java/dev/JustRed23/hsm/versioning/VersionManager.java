@@ -84,7 +84,7 @@ public final class VersionManager {
                             && Objects.equals(v.patchline, latestVersionForPatchline.patchline));
 
             if (!alreadyHaveVersion) {
-                Main.LOGGER.info("New version '{}' available for patchline {}", latestVersionForPatchline.version, latestVersionForPatchline.patchline);
+                Main.LOGGER.info("New version '{}' available for patchline '{}'", latestVersionForPatchline.version, latestVersionForPatchline.patchline);
                 manifest.availableVersions.add(latestVersionForPatchline);
                 manifest.activeVersions.put(latestVersionForPatchline.patchline, latestVersionForPatchline.version);
 
