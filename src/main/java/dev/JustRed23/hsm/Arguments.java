@@ -5,6 +5,7 @@ import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
 import java.io.IOException;
+import java.util.List;
 
 public final class Arguments {
 
@@ -39,6 +40,10 @@ public final class Arguments {
 
     public boolean has(OptionSpec<?> option) {
         return options.has(option);
+    }
+
+    public List<String> getExtraArgs() {
+        return options.nonOptionArguments().stream().map(Object::toString).toList();
     }
 
     public void printHelp() throws IOException {
