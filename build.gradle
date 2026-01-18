@@ -22,6 +22,22 @@ dependencies {
     implementation "com.google.code.gson:gson:${gsonVersion}"
 }
 
+tasks.register("printVersion") {
+    doLast {
+        println(project.version)
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.release = 25
+}
+
 jar {
     manifest {
         attributes(
