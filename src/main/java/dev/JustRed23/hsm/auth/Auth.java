@@ -18,7 +18,7 @@ public final class Auth {
         creds = loadCredentials();
         boolean result = true;
 
-        if (creds == null || Strings.isNotBlank(creds.accessToken) || Strings.isNotBlank(creds.refreshToken)) {
+        if (creds == null || Strings.isBlank(creds.accessToken) || Strings.isBlank(creds.refreshToken)) {
             Main.LOGGER.warn("No valid credentials found, please log in.");
             result = refreshTokens(false);
         }
