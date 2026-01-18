@@ -21,6 +21,12 @@ public class Main {
 
     public Main(Arguments args) throws IOException {
         Main.args = args;
+        LOGGER.info("Hytale Server Manager v{} by JustRed23", BuildConstants.PROJECT_VERSION);
+        LOGGER.warn("----------------------------------------------------------------------------------");
+        LOGGER.warn("This software is not affiliated with Hypixel Studios or Riot Games in any way.");
+        LOGGER.warn("For any problems, please open an issue on GitHub before contacting Hytale support.");
+        LOGGER.warn("GitHub: https://github.com/JustRed23/Hytale-Server-Manager");
+        LOGGER.warn("----------------------------------------------------------------------------------");
         LOGGER.debug("Starting with arguments: {}", args);
 
         if (!Auth.attemptLogin()) return;
