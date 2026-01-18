@@ -57,3 +57,8 @@ This project uses the Gradle Shadow plugin, so to create an executable JAR file,
 ./gradlew shadowJar
 ```
 The resulting JAR file will be located in the `build/libs` directory.
+
+## License
+
+Hytale Server Manager is licensed under the MIT License.  
+This software is unofficial and is not affiliated with Hypixel Studios or Riot Games in any way.
