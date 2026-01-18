@@ -13,7 +13,6 @@ public final class Arguments {
 
     public final OptionSpec<Void> help;
     public final OptionSpec<Void> printServerHelp;
-    public final OptionSpec<String> downloadPath;
     public final OptionSpec<String> patchline;
     public final OptionSpec<Void> skipUpdate;
 
@@ -23,11 +22,6 @@ public final class Arguments {
         help = parser.accepts("help", "Show this help message").forHelp();
 
         printServerHelp = parser.accepts("printServerHelp", "Prints the server help message and exits");
-
-        downloadPath = parser.accepts("downloadPath")
-                .withRequiredArg()
-                .describedAs("The path to download the game zip file to")
-                .defaultsTo("game.zip");
 
         patchline = parser.accepts("patchline")
                 .withRequiredArg()
@@ -54,7 +48,6 @@ public final class Arguments {
     public String toString() {
         return "Arguments{" +
                 "help=" + options.has(help) +
-                ", downloadPath='" + options.valueOf(downloadPath) + '\'' +
                 ", patchline='" + options.valueOf(patchline) + '\'' +
                 ", skipUpdate=" + options.has(skipUpdate) +
                 ", extraArgs=" + options.nonOptionArguments() +
