@@ -3,8 +3,11 @@ package dev.JustRed23.hsm;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dev.JustRed23.hsm.auth.Auth;
+import dev.JustRed23.hsm.versioning.VersionManager;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
 
 public class Main {
 
@@ -12,12 +15,14 @@ public class Main {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static Arguments args;
 
-    public Main(Arguments args) {
+    public Main(Arguments args) throws IOException {
         Main.args = args;
         LOGGER.debug("Starting with arguments: {}", args);
 
         if (!Auth.attemptLogin()) return;
 
+        VersionManager manager = new VersionManager(args.has(args.skipUpdate));
+        manager.run();
     }
 
     static void main(String[] args) throws Exception {

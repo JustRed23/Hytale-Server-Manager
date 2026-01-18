@@ -43,6 +43,10 @@ public final class Arguments {
         return options.valueOf(option);
     }
 
+    public boolean has(OptionSpec<?> option) {
+        return options.has(option);
+    }
+
     public void printHelp() throws IOException {
         parser.printHelpOn(System.out);
     }
