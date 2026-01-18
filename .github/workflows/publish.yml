@@ -36,7 +36,7 @@ jobs:
           echo "Detected project version: $VERSION"
 
       - name: Create GitHub Release
-        if: ${{ !env.version.endsWith('-SNAPSHOT') }}
+        if: ${{ !contains(env.version, '-SNAPSHOT') }}
         uses: softprops/action-gh-release@v2
         with:
           files: build/libs/*-all.jar
