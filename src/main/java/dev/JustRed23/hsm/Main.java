@@ -44,15 +44,15 @@ public class Main {
     }
 
     private static void runIOThreads(Process process) throws InterruptedException {
-        Logger HYTALE_LOGGER = LogManager.getLogger("Hytale");
         Thread outputThread = new Thread(() -> {
+            Logger HYTALE_LOGGER = LogManager.getLogger("Hytale");
             try (var reader = process.inputReader()) {
                 String line;
                 while ((line = reader.readLine()) != null && process.isAlive()) {
                     HYTALE_LOGGER.info(line);
                 }
             } catch (IOException e) {
-                HYTALE_LOGGER.error("Error reading server output", e);
+                LOGGER.error("Error reading server output", e);
             }
         });
 
@@ -74,7 +74,7 @@ public class Main {
                     }
                 }
             } catch (IOException | InterruptedException e) {
-                HYTALE_LOGGER.error("Error writing to server input", e);
+                LOGGER.error("Error writing to server input", e);
             }
         });
 
