@@ -1,6 +1,9 @@
+import org.cthing.gradle.plugins.buildconstants.SourceAccess
+
 plugins {
     id 'java'
     id 'com.gradleup.shadow' version '9.3.1'
+    id 'org.cthing.build-constants' version '2.1.0'
 }
 
 group = 'dev.JustRed23'
@@ -25,6 +28,13 @@ dependencies {
 tasks.register("printVersion") {
     doLast {
         println(project.version)
+    }
+}
+
+tasks {
+    generateBuildConstants {
+        classname = "${project.group}.hsm.BuildConstants"
+        sourceAccess = SourceAccess.PACKAGE
     }
 }
 
