@@ -21,7 +21,7 @@ public class Main {
 
         if (!Auth.attemptLogin()) return;
 
-        VersionManager manager = new VersionManager(args.has(args.skipUpdate));
+        VersionManager manager = new VersionManager(args.has(args.skipUpdate), args.get(args.patchline));
         manager.run();
     }
 

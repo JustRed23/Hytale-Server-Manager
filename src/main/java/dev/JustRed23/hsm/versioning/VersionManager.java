@@ -25,10 +25,12 @@ public final class VersionManager {
     private static final String VERSION_URL_TEMPLATE = "https://account-data.hytale.com/game-assets/version/%s.json";
 
     private final boolean skipUpdate;
+    private final String patchline;
     public VersionManifest manifest;
 
-    public VersionManager(boolean skipUpdate) {
+    public VersionManager(boolean skipUpdate, String patchline) {
         this.skipUpdate = skipUpdate;
+        this.patchline = patchline;
     }
 
     public void run() throws IOException {
@@ -76,7 +78,7 @@ public final class VersionManager {
     }
 
     private VersionInfo fetchLatestVersionInfo() {
-        String latestVersion = String.format(VERSION_URL_TEMPLATE, args.get(args.patchline));
+        String latestVersion = String.format(VERSION_URL_TEMPLATE, patchline);
         HttpRequest request = HttpUtil.authorizedRequestBuilder(latestVersion).GET().build();
         try {
             HttpResponse<String> response = HttpUtil.sendRequest(request);
@@ -86,7 +88,7 @@ public final class VersionManager {
                     return fetchAssetUrl(json.get("url").getAsString());
                 }
                 case 403 -> {
-                    Main.LOGGER.warn("No access to patchline '{}', cannot check for updates.", args.get(args.patchline));
+                    Main.LOGGER.warn("No access to patchline '{}', cannot check for updates.", patchline);
                     return null;
                 }
                 default -> {
@@ -105,7 +107,7 @@ public final class VersionManager {
         try {
             String body = HttpUtil.getRequestBody(request);
             VersionInfo version = Main.GSON.fromJson(body, VersionInfo.class);
-            version.patchline = args.get(args.patchline);
+            version.patchline = patchline;
             Main.LOGGER.info("Found latest version '{}' for patchline '{}'", version.version, version.patchline);
             return version;
         } catch (Exception e) {
