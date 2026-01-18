@@ -21,7 +21,7 @@ import java.util.zip.ZipFile;
 public final class VersionManager {
 
     private static final File VERSION_DIR = new File("versions");
-    private static final File VERISON_MANIFEST_FILE = new File(VERSION_DIR, "versions.json");
+    private static final File VERSION_MANIFEST_FILE = new File(VERSION_DIR, "versions.json");
     private static final String VERSION_URL_TEMPLATE = "https://account-data.hytale.com/game-assets/version/%s.json";
     private static final String BUILD_URL_TEMPLATE = "https://account-data.hytale.com/game-assets/%s";
 
@@ -44,7 +44,7 @@ public final class VersionManager {
         if (!VERSION_DIR.exists() && !VERSION_DIR.mkdirs())
             throw new IOException("Could not create version directory: " + VERSION_DIR.getAbsolutePath());
 
-        boolean manifestExists = VERISON_MANIFEST_FILE.exists();
+        boolean manifestExists = VERSION_MANIFEST_FILE.exists();
         if (!manifestExists || !skipUpdate) {
             Main.LOGGER.info("Checking for updates...");
             checkForUpdates(manifestExists);
@@ -64,7 +64,7 @@ public final class VersionManager {
 
     private void checkForUpdates(boolean manifestExists) throws IOException {
         if (manifestExists) {
-            try (Reader reader = Files.newBufferedReader(VERISON_MANIFEST_FILE.toPath())) {
+            try (Reader reader = Files.newBufferedReader(VERSION_MANIFEST_FILE.toPath())) {
                 manifest = Main.GSON.fromJson(reader, VersionManifest.class);
             }
         } else {
@@ -88,7 +88,7 @@ public final class VersionManager {
                 manifest.availableVersions.add(latestVersionForPatchline);
                 manifest.activeVersions.put(latestVersionForPatchline.patchline, latestVersionForPatchline.version);
 
-                try (Writer writer = Files.newBufferedWriter(VERISON_MANIFEST_FILE.toPath())) {
+                try (Writer writer = Files.newBufferedWriter(VERSION_MANIFEST_FILE.toPath())) {
                     Main.GSON.toJson(manifest, writer);
                 }
             } else Main.LOGGER.info("Up to date!");
