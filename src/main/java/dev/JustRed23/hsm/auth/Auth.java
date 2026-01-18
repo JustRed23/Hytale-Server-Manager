@@ -4,7 +4,6 @@ import dev.JustRed23.hsm.Main;
 import org.apache.logging.log4j.util.Strings;
 
 import java.io.*;
-import java.net.http.HttpClient;
 
 import static java.time.Instant.now;
 import static java.time.Instant.ofEpochSecond;
@@ -45,8 +44,8 @@ public final class Auth {
     }
 
     private static boolean refreshTokens(boolean canUseRefreshToken) {
-        try (HttpClient client = HttpClient.newHttpClient()) {
-            TokenRefresher refresher = new TokenRefresher(client, canUseRefreshToken ? creds.refreshToken : null);
+        try {
+            TokenRefresher refresher = new TokenRefresher(canUseRefreshToken ? creds.refreshToken : null);
             creds = refresher.refreshTokens();
 
             if (creds == null) {

@@ -1,35 +1,32 @@
 package dev.JustRed23.hsm.auth;
 
+import dev.JustRed23.hsm.HttpUtil;
 import dev.JustRed23.hsm.Main;
 import dev.JustRed23.hsm.auth.responses.DeviceCodeResponse;
 import dev.JustRed23.hsm.auth.responses.TokenResponse;
 import org.jspecify.annotations.Nullable;
 
-import java.net.URI;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public final class TokenRefresher {
 
-    private final HttpClient client;
     private final @Nullable String refreshToken;
 
-    public TokenRefresher(HttpClient client, @Nullable String refreshToken) {
-        this.client = client;
+    public TokenRefresher(@Nullable String refreshToken) {
         this.refreshToken = refreshToken;
     }
 
-    public Credentials refreshTokens() throws RuntimeException {
+    public Credentials refreshTokens() throws Exception {
         Credentials refreshTokenCreds = tryRefreshToken();
         if (refreshTokenCreds != null) return refreshTokenCreds;
 
-        HttpRequest request = baseRequest(
-                URI.create("https://oauth.accounts.hytale.com/oauth2/device/auth"),
+        HttpRequest request = HttpUtil.downloaderRequest(
+                "https://oauth.accounts.hytale.com/oauth2/device/auth",
                 "scope=offline+auth:downloader"
         );
 
-        String response = manageResponse(request);
+        String response = HttpUtil.getRequestBody(request);
         DeviceCodeResponse deviceCodeResponse = Main.GSON.fromJson(response, DeviceCodeResponse.class);
 
         String message = """
@@ -56,41 +53,20 @@ public final class TokenRefresher {
         return tokenResponse.toCredentials();
     }
 
-    private HttpRequest baseRequest(URI uri, String body) {
-        final String base = "client_id=hytale-downloader&";
-        final String fullBody = base + (body == null || body.isBlank() ? "" : "&" + body);
-        return HttpRequest.newBuilder()
-                .uri(uri)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .POST(HttpRequest.BodyPublishers.ofString(fullBody))
-                .build();
-    }
-
-    private String manageResponse(HttpRequest req) throws RuntimeException {
-        try {
-            HttpResponse<String> response = client.send(req, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() != 200)
-                throw new RuntimeException("Request returned invalid repsonse (" + response.statusCode() + "): " + response.body());
-            return response.body();
-        } catch (Exception e) {
-            throw new RuntimeException("Request returned error", e);
-        }
-    }
-
     private Credentials tryRefreshToken() {
         try {
             if (refreshToken != null) {
-                HttpRequest request = baseRequest(
-                        URI.create("https://oauth.accounts.hytale.com/oauth2/token"),
+                HttpRequest request = HttpUtil.downloaderRequest(
+                        "https://oauth.accounts.hytale.com/oauth2/token",
                         "grant_type=refresh_token&refresh_token=" + refreshToken
                 );
 
-                String response = manageResponse(request);
+                String response = HttpUtil.getRequestBody(request);
                 TokenResponse tokenResponse = Main.GSON.fromJson(response, TokenResponse.class);
                 return tokenResponse.toCredentials();
             }
         } catch (Exception e) {
-            Main.LOGGER.warn("Failed to refresh tokens using refresh token, falling back to device authorization");
+            Main.LOGGER.warn("Failed to refresh tokens using refresh token, falling back to device authorization", e);
         }
         return null;
     }
@@ -107,13 +83,13 @@ public final class TokenRefresher {
 
             waited += interval;
 
-            HttpRequest request = baseRequest(
-                    URI.create("https://oauth.accounts.hytale.com/oauth2/token"),
+            HttpRequest request = HttpUtil.downloaderRequest(
+                    "https://oauth.accounts.hytale.com/oauth2/token",
                     "grant_type=urn:ietf:params:oauth:grant-type:device_code&device_code=" + deviceCode
             );
 
             try {
-                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                final HttpResponse<String> response = HttpUtil.sendRequest(request);
 
                 if (response.statusCode() == 400 && response.body().contains("authorization_pending"))
                     continue;

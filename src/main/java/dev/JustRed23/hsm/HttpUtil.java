@@ -30,4 +30,13 @@ public final class HttpUtil {
             throw new Exception("Request failed (" + response.statusCode() + "): " + response.body());
         return response.body();
     }
+
+    public static HttpRequest downloaderRequest(String url, String body) {
+        final String base = "client_id=hytale-downloader&";
+        final String fullBody = base + (body == null || body.isBlank() ? "" : "&" + body);
+        return requestBuilder(url)
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .POST(HttpRequest.BodyPublishers.ofString(fullBody))
+                .build();
+    }
 }
